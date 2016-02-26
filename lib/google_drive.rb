@@ -1,3 +1,4 @@
+# coding: utf-8
 # Author: Hiroshi Ichikawa <http://gimite.net/>
 # The license of this source is "New BSD Licence"
 
@@ -5,6 +6,7 @@ require 'json'
 require 'google/api_client'
 
 require 'google_drive/session'
+require 'launchy'
 
 module GoogleDrive
     # Authenticates with given OAuth2 token.
@@ -164,8 +166,12 @@ module GoogleDrive
         auth.refresh_token = config.refresh_token
         auth.fetch_access_token!
       else
-        $stderr.print("\n1. Open this page:\n%s\n\n" % auth.authorization_uri)
-        $stderr.print('2. Enter the authorization code shown in the page: ')
+        # $stderr.print("\n1. Open this page:\n%s\n\n" % auth.authorization_uri)
+        # $stderr.print('2. Enter the authorization code shown in the page: ')
+
+        Launchy.open(auth.authorization_uri)
+        puts 'Paste the code from the auth response page:'
+
         auth.code = $stdin.gets.chomp
         auth.fetch_access_token!
         config.refresh_token = auth.refresh_token
